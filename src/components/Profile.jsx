@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import UserCard from './UserCard';
 import { BASE_URL } from '../utils/constants';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
+import Toast from './Toast';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -13,8 +14,9 @@ const Profile = () => {
     const [age, setAge] = useState(0);
     const [gender, setGender] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
+    const [showToast, setShowToast] = React.useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setFirstName(userData?.firstName || '');
         setLastName(userData?.lastName || '');
         setAge(userData?.age || 0);
@@ -48,10 +50,16 @@ const Profile = () => {
 
             const data = await response.json();
             dispatch(addUser(data.user)); // Update the Redux store with the new user data
-            console.log('Profile updated successfully:', data);
         } catch (error) {
             console.error('Error updating profile:', error);
         }
+    };
+
+    // Show toast for 3 seconds after successful profile update
+    const handleSubmitWithToast = async (e) => {
+        await handleSubmit(e);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000);
     };
 
     if (!userData) {
@@ -65,6 +73,7 @@ const Profile = () => {
     } else {
         return (
             <>
+                {showToast && <Toast message="Profile updated successfully!" />}
                 <div className="flex justify-center my-10">
                     <div className="flex flex-col items-center h-full">
                         <div className="card bg-base-300 w-96 shadow-sm">
@@ -129,7 +138,7 @@ const Profile = () => {
                                             onChange={(e) => setProfilePicture(e.target.value)}
                                         />
                                     </div>
-                                    <button className="btn btn-primary w-full" onClick={handleSubmit}>Save Changes</button>
+                                    <button className="btn btn-primary w-full" onClick={handleSubmitWithToast}>Save Changes</button>
                                 </form>
                             </div>
                         </div>

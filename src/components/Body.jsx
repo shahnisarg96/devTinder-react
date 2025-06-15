@@ -22,6 +22,7 @@ const Body = () => {
             .then(data => {
                 if (data.user) {
                     dispatch(addUser(data.user));
+                    navigate('/');
                 } else {
                     dispatch(removeUser());
                     navigate('/login');

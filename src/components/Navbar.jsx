@@ -32,6 +32,13 @@ const Navbar = () => {
         <div className="navbar bg-base-300 shadow-sm">
             <div className="flex-1">
                 <Link className="btn btn-ghost text-xl" to="/">DevTinder</Link>
+                {
+                    user && <>
+                        <Link className="btn btn-ghost text-xl" to="/connections">Connections</Link>
+                        <Link className="btn btn-ghost text-xl" to="/requests">Requests</Link>
+                        <Link className="btn btn-ghost text-xl" to="/sent">Sent Requests</Link>
+                    </>
+                }
             </div>
             <div className="flex gap-2">
                 {
